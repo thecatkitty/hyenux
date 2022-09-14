@@ -4,7 +4,7 @@ $AlpineRelease = "v3.16"
 $AlpineArch = "x86_64"
 $AlpinePackageRoot = "$AlpineRepo/$AlpineRelease/main/$AlpineArch"
 $AlpineReleasesRoot = "$AlpineRepo/$AlpineRelease/releases/$AlpineArch"
-$AlpinePackages = ("musl", "busybox", "libgcc", "libstdc++", "icu", "icu-libs", "icu-data-en")
+$AlpinePackages = ("musl", "busybox", "libgcc", "libstdc++", "icu", "icu-libs", "icu-data-en", "ncurses-terminfo-base")
 
 $PowerShellUrl = "https://github.com/PowerShell/PowerShell/releases/download/v7.2.6/powershell-7.2.6-linux-alpine-x64.tar.gz"
 
