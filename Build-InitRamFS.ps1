@@ -4,8 +4,8 @@ $AlpineRelease = if ($Debug) { "edge" } else { "v3.16" }
 $AlpineArch = "x86_64"
 $AlpinePackageRoot = "$AlpineRepo/$AlpineRelease/main/$AlpineArch"
 $AlpineReleasesRoot = "$AlpineRepo/$AlpineRelease/releases/$AlpineArch"
-$AlpineDebugPackages = ("strace", "libc6-compat", "libelf", "libbz2", "musl-fts", "xz-libs", "zlib")
-$AlpinePackages = ("musl", "busybox", "libgcc", "libstdc++", "icu", "icu-libs", "icu-data-en", "ncurses-terminfo-base")
+$AlpineDebugPackages = ("busybox", "strace", "libc6-compat", "libelf", "libbz2", "musl-fts", "xz-libs", "zlib")
+$AlpinePackages = ("musl", "libgcc", "libstdc++", "icu", "icu-libs", "icu-data-en", "ncurses-terminfo-base")
 
 if ($Debug) {
     $AlpinePackages = $AlpinePackages + $AlpineDebugPackages
@@ -166,7 +166,6 @@ ln -s /opt/microsoft/dotnet/6.0.8/dotnet $FsDir/proc/self/exe
 
 # Add custom files
 Write-Host "Adding custom files..."
-ln -s /bin/busybox $FsDir/bin/sh
 Copy-Item $SrcDir/init $FsDir/init
 New-Item -ItemType File $FsDir/etc/passwd -ErrorAction Ignore | Out-Null
 
