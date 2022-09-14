@@ -79,6 +79,7 @@ function Expand-Tgz([string]$FileName, [string]$Destination) {
 }
 
 # Prepare directories
+$SrcDir = "src"
 $ExtDir = "ext"
 $FsDir = "fs"
 $OutDir = "out"
@@ -154,10 +155,19 @@ New-Item -ItemType Directory -Force $FsDir/opt/microsoft/powershell/7 | Out-Null
 Expand-Tgz ([System.IO.Path]::GetFileName($PowerShellUrl)) $FsDir/opt/microsoft/powershell/7
 chmod +x $FsDir/opt/microsoft/powershell/7/pwsh
 
+# Add init application
+Write-Host "Adding Hyenux.Init..."
+dotnet publish src/Hyenux.Init/ -r linux-musl-x64 -c Release --no-self-contained
+New-Item -ItemType Directory -Force $FsDir/Hyenux | Out-Null
+Copy-Item -Recurse $SrcDir/Hyenux.Init/bin/Release/net6.0/linux-musl-x64/publish/* $FsDir/Hyenux
+chmod +x $FsDir/Hyenux/Hyenux.Init
+New-Item -ItemType Directory -Force $FsDir/proc/self | Out-Null
+ln -s /opt/microsoft/dotnet/6.0.8/dotnet $FsDir/proc/self/exe
+
 # Add custom files
 Write-Host "Adding custom files..."
 ln -s /bin/busybox $FsDir/bin/sh
-Copy-Item init $FsDir/init
+Copy-Item $SrcDir/init $FsDir/init
 New-Item -ItemType File $FsDir/etc/passwd -ErrorAction Ignore | Out-Null
 
 Write-Host
