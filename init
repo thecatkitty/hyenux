@@ -4,4 +4,4 @@ busybox mount -t proc none /proc
 busybox mount -t sysfs none /sys
 busybox mount -t tmpfs none /tmp
 busybox stty columns 80 rows 25
-pwsh
+/opt/microsoft/powershell/7/pwsh
