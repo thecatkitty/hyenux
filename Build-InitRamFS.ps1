@@ -1,11 +1,17 @@
 # Various URLs and names
 $AlpineRepo = "https://dl-cdn.alpinelinux.org/alpine"
-$AlpineRelease = "v3.16"
+$AlpineRelease = if ($Debug) { "edge" } else { "v3.16" }
 $AlpineArch = "x86_64"
 $AlpinePackageRoot = "$AlpineRepo/$AlpineRelease/main/$AlpineArch"
 $AlpineReleasesRoot = "$AlpineRepo/$AlpineRelease/releases/$AlpineArch"
+$AlpineDebugPackages = ("strace", "libc6-compat", "libelf", "libbz2", "musl-fts", "xz-libs", "zlib")
 $AlpinePackages = ("musl", "busybox", "libgcc", "libstdc++", "icu", "icu-libs", "icu-data-en", "ncurses-terminfo-base")
 
+if ($Debug) {
+    $AlpinePackages = $AlpinePackages + $AlpineDebugPackages
+}
+
+$DotNetUrl = "https://download.visualstudio.microsoft.com/download/pr/2ad9838d-9f2e-40d3-bbff-a3c13390e719/79efd5ce752fb2348e46e0598311f399/dotnet-runtime-6.0.8-linux-musl-x64.tar.gz"
 $PowerShellUrl = "https://github.com/PowerShell/PowerShell/releases/download/v7.2.6/powershell-7.2.6-linux-alpine-x64.tar.gz"
 
 # Helper functions
@@ -121,7 +127,8 @@ $PackageFiles | ForEach-Object {
     Update-DownloadedFile "$AlpinePackageRoot/$_"
 }
 
-# Download PowerShell
+# Download .NET packages
+Update-DownloadedFile $DotNetUrl
 Update-DownloadedFile $PowerShellUrl
 
 Write-Host
@@ -138,11 +145,18 @@ $PackageFiles | ForEach-Object {
 }
 
 # Unpack .NET package
+New-Item -ItemType Directory -Force $FsDir/opt/microsoft/dotnet/6.0.8 | Out-Null
+Expand-Tgz ([System.IO.Path]::GetFileName($DotNetUrl)) $FsDir/opt/microsoft/dotnet/6.0.8
+chmod +x $FsDir/opt/microsoft/dotnet/6.0.8/dotnet
+
+# Unpack PowerShell package
 New-Item -ItemType Directory -Force $FsDir/opt/microsoft/powershell/7 | Out-Null
 Expand-Tgz ([System.IO.Path]::GetFileName($PowerShellUrl)) $FsDir/opt/microsoft/powershell/7
+chmod +x $FsDir/opt/microsoft/powershell/7/pwsh
 
 # Add custom files
 Write-Host "Adding custom files..."
+ln -s /bin/busybox $FsDir/bin/sh
 Copy-Item init $FsDir/init
 New-Item -ItemType File $FsDir/etc/passwd -ErrorAction Ignore | Out-Null
 

@@ -4,4 +4,8 @@ busybox mount -t proc none /proc
 busybox mount -t sysfs none /sys
 busybox mount -t tmpfs none /tmp
 busybox stty columns 80 rows 25
-/opt/microsoft/powershell/7/pwsh
+
+export DOTNET_ROOT=/opt/microsoft/dotnet/6.0.8
+export PATH=$PATH:$DOTNET_ROOT
+
+dotnet /opt/microsoft/powershell/7/pwsh.dll
