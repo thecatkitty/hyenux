@@ -14,6 +14,9 @@ if ($Debug) {
 $DotNetUrl = "https://download.visualstudio.microsoft.com/download/pr/2ad9838d-9f2e-40d3-bbff-a3c13390e719/79efd5ce752fb2348e46e0598311f399/dotnet-runtime-6.0.8-linux-musl-x64.tar.gz"
 $PowerShellUrl = "https://github.com/PowerShell/PowerShell/releases/download/v7.2.6/powershell-7.2.6-linux-alpine-x64.tar.gz"
 
+$DotNetRoot = "/usr/share/dotnet"
+$PowerShellRoot = "/opt/microsoft/powershell/7"
+
 # Helper functions
 function Update-DownloadedFile([string]$Url) {
     $Name = [System.IO.Path]::GetFileName($Url)
@@ -146,14 +149,14 @@ $PackageFiles | ForEach-Object {
 }
 
 # Unpack .NET package
-New-Item -ItemType Directory -Force $FsDir/opt/microsoft/dotnet/6.0.8 | Out-Null
-Expand-Tgz ([System.IO.Path]::GetFileName($DotNetUrl)) $FsDir/opt/microsoft/dotnet/6.0.8
-chmod +x $FsDir/opt/microsoft/dotnet/6.0.8/dotnet
+New-Item -ItemType Directory -Force $FsDir/$DotNetRoot | Out-Null
+Expand-Tgz ([System.IO.Path]::GetFileName($DotNetUrl)) $FsDir/$DotNetRoot
+chmod +x $FsDir/$DotNetRoot/dotnet
 
 # Unpack PowerShell package
-New-Item -ItemType Directory -Force $FsDir/opt/microsoft/powershell/7 | Out-Null
-Expand-Tgz ([System.IO.Path]::GetFileName($PowerShellUrl)) $FsDir/opt/microsoft/powershell/7
-chmod +x $FsDir/opt/microsoft/powershell/7/pwsh
+New-Item -ItemType Directory -Force $FsDir/$PowerShellRoot | Out-Null
+Expand-Tgz ([System.IO.Path]::GetFileName($PowerShellUrl)) $FsDir/$PowerShellRoot
+chmod +x $FsDir/$PowerShellRoot/pwsh
 
 # Add init application
 Write-Host "Adding Hyenux.Init..."
@@ -162,7 +165,7 @@ New-Item -ItemType Directory -Force $FsDir/Hyenux | Out-Null
 Copy-Item -Recurse $SrcDir/Hyenux.Init/bin/Release/net6.0/linux-musl-x64/publish/* $FsDir/Hyenux
 chmod +x $FsDir/Hyenux/Hyenux.Init
 New-Item -ItemType Directory -Force $FsDir/proc/self | Out-Null
-ln -s /opt/microsoft/dotnet/6.0.8/dotnet $FsDir/proc/self/exe
+ln -s $DotNetRoot/dotnet $FsDir/proc/self/exe
 
 # Add custom files
 Write-Host "Adding custom files..."

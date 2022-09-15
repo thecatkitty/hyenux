@@ -1,1 +1,1 @@
-#!/opt/microsoft/dotnet/6.0.8/dotnet /Hyenux/Hyenux.Init.dll
+#!/usr/share/dotnet/dotnet /Hyenux/Hyenux.Init.dll
