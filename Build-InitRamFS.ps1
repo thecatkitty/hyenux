@@ -139,7 +139,7 @@ Write-Host
 
 # Prepare filesystem structure
 Write-Host "Preparing filesystem directories..."
-("bin", "dev", "etc", "opt", "proc", "sys", "tmp") | ForEach-Object {
+("bin", "dev", "etc", "opt", "proc", "root", "sys", "tmp") | ForEach-Object {
     New-Item -ItemType Directory -Force $FsDir/$_ | Out-Null
 }
 
@@ -169,7 +169,7 @@ ln -s /Hyenux/Hyenux.Init $FsDir/init
 
 # Add custom files
 Write-Host "Adding custom files..."
-New-Item -ItemType File $FsDir/etc/passwd -ErrorAction Ignore | Out-Null
+Copy-Item -Recurse -Force $SrcDir/fs/* $FsDir/
 
 Write-Host
 
@@ -177,7 +177,7 @@ Write-Host
 Remove-Item $OutDir/initramfs.cpio -ErrorAction Ignore
 Write-Host "Packing initramfs... " -NoNewline
 Set-Location $FsDir
-sh -c "find . | cpio --quiet -o -H newc > ../$OutDir/initramfs.cpio" | Out-Null
+sh -c "find . | cpio --quiet -o -H newc -R root:root > ../$OutDir/initramfs.cpio" | Out-Null
 Set-Location ..
 Write-Host (Format-DataLength (Get-ChildItem $OutDir/initramfs.cpio).Length)
 
