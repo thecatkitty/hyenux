@@ -160,16 +160,15 @@ chmod +x $FsDir/$PowerShellRoot/pwsh
 
 # Add init application
 Write-Host "Adding Hyenux.Init..."
-dotnet publish src/Hyenux.Init/ -r linux-musl-x64 -c Release --no-self-contained
+dotnet publish src/Hyenux.Init/ -c Release
 New-Item -ItemType Directory -Force $FsDir/Hyenux | Out-Null
 Copy-Item -Recurse $SrcDir/Hyenux.Init/bin/Release/net6.0/linux-musl-x64/publish/* $FsDir/Hyenux
-chmod +x $FsDir/Hyenux/Hyenux.Init
 New-Item -ItemType Directory -Force $FsDir/proc/self | Out-Null
-ln -s $DotNetRoot/dotnet $FsDir/proc/self/exe
+ln -s /Hyenux/Hyenux.Init $FsDir/proc/self/exe
+ln -s /Hyenux/Hyenux.Init $FsDir/init
 
 # Add custom files
 Write-Host "Adding custom files..."
-Copy-Item $SrcDir/init $FsDir/init
 New-Item -ItemType File $FsDir/etc/passwd -ErrorAction Ignore | Out-Null
 
 Write-Host
