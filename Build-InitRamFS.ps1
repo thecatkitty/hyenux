@@ -1,6 +1,8 @@
+$ErrorActionPreference = "Stop"
+
 # Various URLs and names
 $AlpineRepo = "https://dl-cdn.alpinelinux.org/alpine"
-$AlpineRelease = if ($Debug) { "edge" } else { "v3.16" }
+$AlpineRelease = if ($Debug) { "edge" } else { "v3.24" }
 $AlpineArch = "x86_64"
 $AlpinePackageRoot = "$AlpineRepo/$AlpineRelease/main/$AlpineArch"
 $AlpineReleasesRoot = "$AlpineRepo/$AlpineRelease/releases/$AlpineArch"
@@ -11,8 +13,8 @@ if ($Debug) {
     $AlpinePackages = $AlpinePackages + $AlpineDebugPackages
 }
 
-$DotNetUrl = "https://download.visualstudio.microsoft.com/download/pr/2ad9838d-9f2e-40d3-bbff-a3c13390e719/79efd5ce752fb2348e46e0598311f399/dotnet-runtime-6.0.8-linux-musl-x64.tar.gz"
-$PowerShellUrl = "https://github.com/PowerShell/PowerShell/releases/download/v7.2.6/powershell-7.2.6-linux-alpine-x64.tar.gz"
+$DotNetUrl = "https://builds.dotnet.microsoft.com/dotnet/Runtime/10.0.9/dotnet-runtime-10.0.9-linux-musl-x64.tar.gz"
+$PowerShellUrl = "https://github.com/PowerShell/PowerShell/releases/download/v7.6.3/powershell-7.6.3-linux-musl-x64.tar.gz"
 
 $DotNetRoot = "/usr/share/dotnet"
 $PowerShellRoot = "/opt/microsoft/powershell/7"
@@ -162,7 +164,7 @@ chmod +x $FsDir/$PowerShellRoot/pwsh
 Write-Host "Adding Hyenux.Init..."
 dotnet publish src/Hyenux.Init/ -c Release
 New-Item -ItemType Directory -Force $FsDir/Hyenux | Out-Null
-Copy-Item -Recurse $SrcDir/Hyenux.Init/bin/Release/net6.0/linux-musl-x64/publish/* $FsDir/Hyenux
+Copy-Item -Recurse $SrcDir/Hyenux.Init/bin/Release/net10.0/linux-musl-x64/publish/* $FsDir/Hyenux
 New-Item -ItemType Directory -Force $FsDir/proc/self | Out-Null
 ln -s /Hyenux/Hyenux.Init $FsDir/proc/self/exe
 ln -s /Hyenux/Hyenux.Init $FsDir/init
