@@ -17,7 +17,7 @@ public class LoginShellService : BackgroundService
     {
         try
         {
-            SetWindowSize(new winsize(25, 80));
+            SetWindowSize(new WindowSize(25, 80));
         }
         catch (PlatformException pex)
         {
@@ -50,7 +50,7 @@ public class LoginShellService : BackgroundService
         await Task.CompletedTask;
     }
 
-    private unsafe void SetWindowSize(winsize sz)
+    private unsafe void SetWindowSize(WindowSize sz)
     {
         if (LibC.ioctl(LibC.STDOUT_FILENO, LibC.TIOCSWINSZ, &sz) != 0)
         {
@@ -59,19 +59,11 @@ public class LoginShellService : BackgroundService
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    struct winsize
+    struct WindowSize(ushort row, ushort col, ushort x = 0, ushort y = 0)
     {
-        ushort ws_row;
-        ushort ws_col;
-        ushort ws_xpixel;
-        ushort ws_ypixel;
-
-        public winsize(ushort row, ushort col, ushort x = 0, ushort y = 0)
-        {
-            ws_row = row;
-            ws_col = col;
-            ws_xpixel = x;
-            ws_ypixel = y;
-        }
+        ushort ws_row = row;
+        ushort ws_col = col;
+        ushort ws_xpixel = x;
+        ushort ws_ypixel = y;
     }
 }
