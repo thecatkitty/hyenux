@@ -40,7 +40,7 @@ public class FileSystemService : BackgroundService
         {
             if (LibC.mount(sourcePtr, targetPtr, typePtr, (ulong_t)flags, dataPtr) != 0)
             {
-                PlatformException.Throw();
+                throw PlatformException.FromErrno();
             }
         }
 

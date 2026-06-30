@@ -54,7 +54,7 @@ public class LoginShellService : BackgroundService
     {
         if (LibC.ioctl(LibC.STDOUT_FILENO, LibC.TIOCSWINSZ, &sz) != 0)
         {
-            PlatformException.Throw();
+            throw PlatformException.FromErrno();
         }
     }
 

@@ -5,15 +5,11 @@ using Tmds.Linux;
 
 class PlatformException : Exception
 {
-    public PlatformException(int errno) :
+    private PlatformException(int errno) :
         base(GetErrorMessage(errno))
     {
         HResult = errno;
     }
-
-    public PlatformException() :
-        this(LibC.errno)
-    {}
 
     private unsafe static string GetErrorMessage(int errno)
     {
@@ -25,5 +21,5 @@ class PlatformException : Exception
         return (rv == 0 ? Marshal.PtrToStringAnsi((IntPtr)buffer) : null) ?? $"errno {errno}";
     }
 
-    public static void Throw() => throw new PlatformException();
+    public static PlatformException FromErrno() => new(LibC.errno);
 }
