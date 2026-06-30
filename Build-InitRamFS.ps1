@@ -1,4 +1,5 @@
 $ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $true
 
 # Various URLs and names
 $AlpineRepo = "https://dl-cdn.alpinelinux.org/alpine"
@@ -166,8 +167,13 @@ dotnet publish src/Hyenux.Init/ -c Release
 New-Item -ItemType Directory -Force $FsDir/Hyenux | Out-Null
 Copy-Item -Recurse $SrcDir/Hyenux.Init/bin/Release/net10.0/linux-musl-x64/publish/* $FsDir/Hyenux
 New-Item -ItemType Directory -Force $FsDir/proc/self | Out-Null
-ln -s /Hyenux/Hyenux.Init $FsDir/proc/self/exe
-ln -s /Hyenux/Hyenux.Init $FsDir/init
+
+if (-not (Test-Path $FsDir/proc/self/exe)) {
+    ln -s /Hyenux/Hyenux.Init $FsDir/proc/self/exe | Out-Null
+}
+if (-not (Test-Path $FsDir/init)) {
+    ln -s /Hyenux/Hyenux.Init $FsDir/init | Out-Null
+}
 
 # Add custom files
 Write-Host "Adding custom files..."
